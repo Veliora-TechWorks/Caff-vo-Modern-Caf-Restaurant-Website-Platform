@@ -1,0 +1,32 @@
+{
+  "offers": [
+    {
+      "id": "evening-special",
+      "title": "Evening Chai & Snacks Combo",
+      "description": "Get Masala Chai + 2 Samosas for just ₹70 (Save ₹20) | Available 4 PM - 7 PM",
+      "validUntil": "31st December 2024",
+      "discount": "₹20 OFF"
+    },
+    {
+      "id": "weekend-biryani",
+      "title": "Weekend Biryani Bonanza",
+      "description": "Order any Biryani and get a complimentary Raita + Gulab Jamun | Saturday & Sunday only",
+      "validUntil": "Every Weekend",
+      "discount": "Free Add-ons"
+    },
+    {
+      "id": "family-meal",
+      "title": "Family Meal Deal",
+      "description": "2 Main Course + 4 Naan/Roti + 2 Beverages for ₹699 (Worth ₹850)",
+      "validUntil": "Ongoing",
+      "discount": "₹151 OFF"
+    },
+    {
+      "id": "first-order",
+      "title": "First Order Special",
+      "description": "Get 15% off on your first order above ₹300. Use code: FIRST15",
+      "validUntil": "For New Customers",
+      "discount": "15% OFF"
+    }
+  ]
+}

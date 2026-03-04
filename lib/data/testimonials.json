@@ -1,0 +1,100 @@
+{
+  "testimonials": [
+    {
+      "id": 1,
+      "name": "Priya Sharma",
+      "rating": 5,
+      "text": "Best masala chai in the city! The ambiance is perfect for evening adda with friends. Highly recommend the samosas too!",
+      "date": "2024-01-15",
+      "location": "Mumbai"
+    },
+    {
+      "id": 2,
+      "name": "Rahul Verma",
+      "rating": 5,
+      "text": "Amazing paneer butter masala and butter naan! The food quality is top-notch and prices are very reasonable. Will definitely visit again.",
+      "date": "2024-01-10",
+      "location": "Delhi"
+    },
+    {
+      "id": 3,
+      "name": "Anjali Patel",
+      "rating": 5,
+      "text": "Perfect spot for family dinners. The biryani is absolutely delicious and the staff is very courteous. Great value for money!",
+      "date": "2024-01-05",
+      "location": "Bangalore"
+    },
+    {
+      "id": 4,
+      "name": "Vikram Singh",
+      "rating": 5,
+      "text": "Love the filter coffee here! Reminds me of authentic South Indian taste. The vada pav is also a must-try.",
+      "date": "2023-12-28",
+      "location": "Pune"
+    },
+    {
+      "id": 5,
+      "name": "Sneha Reddy",
+      "rating": 5,
+      "text": "The dosas are crispy and perfectly made! Service is quick and the place is always clean. My go-to breakfast spot.",
+      "date": "2024-01-20",
+      "location": "Hyderabad"
+    },
+    {
+      "id": 6,
+      "name": "Arjun Mehta",
+      "rating": 4,
+      "text": "Great variety of dishes. The chicken tikka is flavorful and the portions are generous. Ambiance could be better but food makes up for it.",
+      "date": "2024-01-18",
+      "location": "Ahmedabad"
+    },
+    {
+      "id": 7,
+      "name": "Kavya Iyer",
+      "rating": 5,
+      "text": "Absolutely love their cold coffee and sandwiches! Perfect place to work or study. Free WiFi is a bonus.",
+      "date": "2024-01-12",
+      "location": "Chennai"
+    },
+    {
+      "id": 8,
+      "name": "Rohan Gupta",
+      "rating": 5,
+      "text": "The chole bhature here is amazing! Authentic taste and generous portions. Staff is friendly and service is prompt.",
+      "date": "2024-01-08",
+      "location": "Jaipur"
+    },
+    {
+      "id": 9,
+      "name": "Meera Nair",
+      "rating": 5,
+      "text": "Best place for evening snacks! The pakoras are crispy and the mint chutney is divine. Prices are pocket-friendly too.",
+      "date": "2024-01-03",
+      "location": "Kochi"
+    },
+    {
+      "id": 10,
+      "name": "Aditya Kumar",
+      "rating": 4,
+      "text": "Good food and nice atmosphere. The dal makhani is creamy and delicious. Slightly crowded during weekends but worth the wait.",
+      "date": "2023-12-30",
+      "location": "Kolkata"
+    },
+    {
+      "id": 11,
+      "name": "Divya Joshi",
+      "rating": 5,
+      "text": "Their pav bhaji is to die for! Perfect blend of spices. The place has a cozy vibe and is great for casual meetups.",
+      "date": "2023-12-25",
+      "location": "Surat"
+    },
+    {
+      "id": 12,
+      "name": "Karan Malhotra",
+      "rating": 5,
+      "text": "Excellent food quality and hygiene standards. The tandoori items are perfectly cooked. Highly recommend for family dining.",
+      "date": "2023-12-20",
+      "location": "Chandigarh"
+    }
+  ]
+}

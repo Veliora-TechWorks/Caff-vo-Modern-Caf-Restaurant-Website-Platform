@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&display=swap');
+
+@layer base {
+  body {
+    @apply bg-lightCream text-dark antialiased font-sans;
+  }
+  
+  h1, h2, h3 {
+    @apply font-display;
+  }
+  
+  h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-gradient-accent text-white px-8 py-4 rounded-2xl font-bold hover:shadow-glow transition-all duration-300 transform hover:scale-105;
+  }
+  
+  .btn-secondary {
+    @apply bg-white text-primary px-8 py-4 rounded-2xl font-bold hover:bg-gray-50 transition-all duration-300 border-2 border-primary transform hover:scale-105;
+  }
+  
+  .card {
+    @apply bg-white rounded-2xl p-6 shadow-card hover:shadow-card-hover transition-all duration-300;
+  }
+  
+  .badge-veg {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 text-xs font-bold rounded-full border-2 border-green-500;
+  }
+  
+  .badge-nonveg {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 text-xs font-bold rounded-full border-2 border-red-500;
+  }
+  
+  .badge-popular {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-accent text-white text-xs font-bold rounded-full shadow-md;
+  }
+}
+
+@layer utilities {
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8 py-20 lg:py-28;
+  }
+  
+  .container-custom {
+    @apply max-w-7xl mx-auto;
+  }
+  
+  .text-gradient {
+    @apply bg-gradient-accent bg-clip-text text-transparent;
+  }
+  
+  .font-cursive {
+    font-family: 'Dancing Script', cursive;
+  }
+  
+  .font-script {
+    font-family: 'Great Vibes', cursive;
+  }
+}
