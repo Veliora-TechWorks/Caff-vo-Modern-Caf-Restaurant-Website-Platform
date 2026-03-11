@@ -163,9 +163,9 @@ export default function Testimonials() {
             Join thousands of happy customers and taste the difference today!
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/order" className="bg-gradient-accent text-white px-8 py-3 rounded-xl font-bold hover:shadow-glow transition-all transform hover:scale-105">
+            {/* <Link href="/order" className="bg-gradient-accent text-white px-8 py-3 rounded-xl font-bold hover:shadow-glow transition-all transform hover:scale-105">
               Order Now
-            </Link>
+            </Link> */}
             <button onClick={() => setIsModalOpen(true)} className="bg-white border-2 border-primary text-primary px-8 py-3 rounded-xl font-bold hover:bg-primary hover:text-white transition-all transform hover:scale-105">
               Reserve Table
             </button>

@@ -27,7 +27,7 @@ export default function HeroWithNav() {
     { href: '/', label: 'Home' },
     { href: '/menu', label: 'Menu' },
     // { href: '/order', label: 'Order Online' },
-    { href: '/offers', label: 'Offers' },
+    // { href: '/offers', label: 'Offers' },
     { href: '/contact', label: 'Contact' },
   ]
 
