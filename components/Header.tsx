@@ -22,9 +22,9 @@ export default function Header() {
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/menu', label: 'Menu' },
-    { href: '/order', label: 'Order Online' },
-    { href: '/reserve', label: 'Reserve Table' },
-    { href: '/offers', label: 'Offers' },
+    // { href: '/order', label: 'Order Online' },
+    // { href: '/reserve', label: 'Reserve Table' },
+    // { href: '/offers', label: 'Offers' },
     { href: '/contact', label: 'Contact' },
   ]
 
@@ -73,13 +73,13 @@ export default function Header() {
               <Phone className="w-4 h-4" />
               <span className="text-sm">+91 98765 43210</span>
             </a>
-            <Link
+            {/* <Link
               href="/order"
               className="bg-gradient-accent text-white px-5 py-2.5 rounded-xl font-bold hover:shadow-glow transition-all flex items-center gap-2"
             >
               <ShoppingBag className="w-4 h-4" />
               Order Now
-            </Link>
+            </Link> */}
           </div>
 
           {/* Mobile Menu Button */}
@@ -119,14 +119,14 @@ export default function Header() {
                 <Phone className="w-4 h-4" />
                 +91 98765 43210
               </a>
-              <Link
+              {/* <Link
                 href="/order"
                 className="flex items-center justify-center gap-2 bg-gradient-accent text-white px-6 py-3 rounded-xl font-bold"
                 onClick={() => setIsOpen(false)}
               >
                 <ShoppingBag className="w-4 h-4" />
                 Order Now
-              </Link>
+              </Link> */}
             </div>
           </div>
         )}

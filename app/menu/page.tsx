@@ -2,58 +2,38 @@
 
 import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Star, ShoppingBag, Search, X, Flame, IndianRupee } from 'lucide-react'
+import { Search, X, Flame, ChevronDown, ChevronUp } from 'lucide-react'
 import menuData from '@/lib/data/menu.json'
-import Link from 'next/link'
-
-type SortOption = 'popular' | 'price-low' | 'price-high' | 'name'
 
 export default function MenuPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [showPopularOnly, setShowPopularOnly] = useState(false)
   const [vegFilter, setVegFilter] = useState<'all' | 'veg' | 'nonveg'>('all')
-  const [sortBy, setSortBy] = useState<SortOption>('popular')
+  const [showPopularOnly, setShowPopularOnly] = useState(false)
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([])
 
-  const allItems = useMemo(() => 
-    menuData.categories.flatMap(cat => 
-      cat.items.map(item => ({ ...item, category: cat.name, categoryId: cat.id }))
-    ), []
-  )
+  const toggleCategory = (categoryId: string) => {
+    setExpandedCategories(prev => 
+      prev.includes(categoryId) 
+        ? prev.filter(id => id !== categoryId)
+        : [...prev, categoryId]
+    )
+  }
 
-  const filteredAndSortedItems = useMemo(() => {
-    let items = allItems.filter(item => {
-      const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           item.description.toLowerCase().includes(searchQuery.toLowerCase())
-      const matchesCategory = !selectedCategory || item.categoryId === selectedCategory
-      const matchesPopular = !showPopularOnly || item.popular
-      const matchesVeg = vegFilter === 'all' || 
-                        (vegFilter === 'veg' && item.isVeg) ||
-                        (vegFilter === 'nonveg' && !item.isVeg)
-      
-      return matchesSearch && matchesCategory && matchesPopular && matchesVeg
-    })
-
-    // Sort items
-    switch(sortBy) {
-      case 'popular':
-        items = items.sort((a, b) => (b.popular ? 1 : 0) - (a.popular ? 1 : 0))
-        break
-      case 'price-low':
-        items = items.sort((a, b) => a.price - b.price)
-        break
-      case 'price-high':
-        items = items.sort((a, b) => b.price - a.price)
-        break
-      case 'name':
-        items = items.sort((a, b) => a.name.localeCompare(b.name))
-        break
-    }
-
-    return items
-  }, [allItems, searchQuery, selectedCategory, showPopularOnly, vegFilter, sortBy])
-
-  const popularItems = useMemo(() => allItems.filter(item => item.popular), [allItems])
+  const filteredCategories = useMemo(() => {
+    return menuData.categories.map(category => ({
+      ...category,
+      items: category.items.filter(item => {
+        const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                             item.description.toLowerCase().includes(searchQuery.toLowerCase())
+        const matchesVeg = vegFilter === 'all' || 
+                          (vegFilter === 'veg' && item.isVeg) ||
+                          (vegFilter === 'nonveg' && !item.isVeg)
+        const matchesPopular = !showPopularOnly || item.popular
+        
+        return matchesSearch && matchesVeg && matchesPopular
+      })
+    })).filter(category => category.items.length > 0)
+  }, [searchQuery, vegFilter, showPopularOnly])
 
   const getCategoryIcon = (categoryId: string) => {
     const icons: Record<string, string> = {
@@ -68,121 +48,158 @@ export default function MenuPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cream via-white to-lightCream">
-      {/* Compact Hero Section */}
-      <div className="relative bg-gradient-to-br from-primary via-dark to-secondary text-white pt-28 pb-12 overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-72 h-72 bg-gold rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-0 w-72 h-72 bg-accent rounded-full blur-3xl"></div>
-        </div>
-        
-        <div className="container-custom relative z-10">
-          <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-black mb-3">
-              Our <span className="font-script text-5xl md:text-6xl bg-gradient-to-r from-accent via-gold to-rose bg-clip-text text-transparent">Menu</span>
+    <div className="min-h-screen bg-gradient-to-br from-cream via-lightCream to-white">
+      <div className="pt-32 pb-20">
+        <div className="container mx-auto px-4">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-8"
+          >
+            <h1 className="text-4xl md:text-5xl font-black mb-4 text-primary">
+              Our <span className="font-script text-5xl md:text-6xl text-gradient">Menu</span>
             </h1>
-            <p className="text-gray-300 mb-6">Discover authentic flavors crafted with passion</p>
-            
-            {/* Search Bar */}
-            <div className="max-w-xl mx-auto">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search dishes..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-12 py-3 rounded-xl bg-white/95 backdrop-blur-md text-dark font-semibold focus:ring-2 focus:ring-accent transition-all shadow-lg"
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery('')}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                )}
-              </div>
+            <p className="text-lg text-gray-600 font-medium max-w-2xl mx-auto">
+              Explore our delicious selection of authentic Indian cuisine and beverages
+            </p>
+          </motion.div>
+
+          {/* Search Bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="max-w-2xl mx-auto mb-8"
+          >
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search for dishes..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-12 py-4 rounded-xl bg-white text-dark font-semibold focus:ring-2 focus:ring-accent transition-all shadow-md border border-gray-200"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              )}
             </div>
-          </div>
-        </div>
-      </div>
+          </motion.div>
 
-      {/* Categories Section */}
-      <div className="bg-white border-b border-gray-200 py-6">
-        <div className="container-custom">
-          <div className="flex items-center gap-3 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-            <style jsx>{`
-              div::-webkit-scrollbar {
-                display: none;
-              }
-            `}</style>
-            <button
-              onClick={() => setSelectedCategory(null)}
-              className={`flex-shrink-0 px-5 py-2.5 rounded-xl font-bold text-sm transition-all ${
-                !selectedCategory
-                  ? 'bg-gradient-accent text-white shadow-md'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              All Items
-            </button>
-            {menuData.categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`flex-shrink-0 px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
-                  selectedCategory === cat.id
-                    ? 'bg-gradient-accent text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                <span className="text-lg">{getCategoryIcon(cat.id)}</span>
-                {cat.name}
-                <span className="text-xs opacity-75">({cat.items.length})</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Filters Bar */}
-      <div className="sticky top-20 z-40 bg-white/95 backdrop-blur-md shadow-md border-b border-gray-200">
-        <div className="container-custom py-4">
-          {/* Desktop & Tablet Layout */}
-          <div className="hidden md:flex md:flex-col lg:flex-row lg:items-center gap-4">
-            {/* Left Side - Filters */}
-            <div className="flex flex-wrap items-center gap-3">
-              {/* Veg Filter */}
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-gray-500 uppercase">Type:</span>
-                <div className="flex gap-1 bg-gray-100 p-1 rounded-lg">
+          {/* Filters */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white rounded-xl shadow-md p-4 mb-8 border border-gray-200"
+          >
+            {/* Desktop & Tablet Layout */}
+            <div className="hidden md:flex md:items-center md:justify-between gap-4">
+              {/* Left Side - Type Filter */}
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-bold text-gray-700">Type:</span>
+                <div className="flex gap-2">
                   <button
                     onClick={() => setVegFilter('all')}
-                    className={`px-3 py-1.5 rounded-md font-bold text-xs transition-all ${
-                      vegFilter === 'all' ? 'bg-white shadow-sm text-primary' : 'text-gray-600 hover:text-primary'
+                    className={`px-4 py-2 rounded-lg font-bold text-sm transition-all ${
+                      vegFilter === 'all' ? 'bg-gradient-accent text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
                     All
                   </button>
                   <button
                     onClick={() => setVegFilter('veg')}
-                    className={`px-3 py-1.5 rounded-md font-bold text-xs transition-all flex items-center gap-1.5 ${
-                      vegFilter === 'veg' ? 'bg-white shadow-sm text-green-600' : 'text-gray-600 hover:text-green-600'
+                    className={`px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${
+                      vegFilter === 'veg' ? 'bg-green-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
-                    <div className="w-3 h-3 border-2 border-green-600 flex items-center justify-center">
+                    <div className="w-4 h-4 border-2 border-current flex items-center justify-center bg-white rounded-sm">
+                      <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+                    </div>
+                    Veg
+                  </button>
+                  <button
+                    onClick={() => setVegFilter('nonveg')}
+                    className={`px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${
+                      vegFilter === 'nonveg' ? 'bg-red-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    <div className="w-4 h-4 border-2 border-current flex items-center justify-center bg-white rounded-sm">
+                      <div className="w-2 h-2 bg-red-600 rounded-full"></div>
+                    </div>
+                    Non-Veg
+                  </button>
+                </div>
+              </div>
+
+              {/* Right Side - Popular & Clear */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setShowPopularOnly(!showPopularOnly)}
+                  className={`px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${
+                    showPopularOnly
+                      ? 'bg-gradient-accent text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  <Flame className="w-4 h-4" />
+                  Popular Only
+                </button>
+
+                {(searchQuery || vegFilter !== 'all' || showPopularOnly) && (
+                  <button
+                    onClick={() => {
+                      setSearchQuery('')
+                      setVegFilter('all')
+                      setShowPopularOnly(false)
+                    }}
+                    className="px-4 py-2 rounded-lg font-bold text-sm bg-red-50 text-red-600 hover:bg-red-100 transition-all flex items-center gap-2"
+                  >
+                    <X className="w-4 h-4" />
+                    Clear
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Mobile Layout */}
+            <div className="md:hidden space-y-3">
+              {/* Type Filter */}
+              <div>
+                <span className="text-xs font-bold text-gray-600 mb-2 block">Type</span>
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    onClick={() => setVegFilter('all')}
+                    className={`px-3 py-2.5 rounded-lg font-bold text-xs transition-all ${
+                      vegFilter === 'all' ? 'bg-gradient-accent text-white shadow-md' : 'bg-gray-100 text-gray-700'
+                    }`}
+                  >
+                    All
+                  </button>
+                  <button
+                    onClick={() => setVegFilter('veg')}
+                    className={`px-3 py-2.5 rounded-lg font-bold text-xs transition-all flex items-center justify-center gap-1.5 ${
+                      vegFilter === 'veg' ? 'bg-green-600 text-white shadow-md' : 'bg-gray-100 text-gray-700'
+                    }`}
+                  >
+                    <div className="w-3.5 h-3.5 border-2 border-current flex items-center justify-center bg-white rounded-sm">
                       <div className="w-1.5 h-1.5 bg-green-600 rounded-full"></div>
                     </div>
                     Veg
                   </button>
                   <button
                     onClick={() => setVegFilter('nonveg')}
-                    className={`px-3 py-1.5 rounded-md font-bold text-xs transition-all flex items-center gap-1.5 ${
-                      vegFilter === 'nonveg' ? 'bg-white shadow-sm text-red-600' : 'text-gray-600 hover:text-red-600'
+                    className={`px-3 py-2.5 rounded-lg font-bold text-xs transition-all flex items-center justify-center gap-1.5 ${
+                      vegFilter === 'nonveg' ? 'bg-red-600 text-white shadow-md' : 'bg-gray-100 text-gray-700'
                     }`}
                   >
-                    <div className="w-3 h-3 border-2 border-red-600 flex items-center justify-center">
+                    <div className="w-3.5 h-3.5 border-2 border-current flex items-center justify-center bg-white rounded-sm">
                       <div className="w-1.5 h-1.5 bg-red-600 rounded-full"></div>
                     </div>
                     Non-Veg
@@ -190,356 +207,229 @@ export default function MenuPage() {
                 </div>
               </div>
 
-              {/* Divider */}
-              <div className="hidden lg:block w-px h-8 bg-gray-300"></div>
-
-              {/* Popular Filter */}
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-gray-500 uppercase">Filter:</span>
+              {/* Popular & Clear */}
+              <div className="flex gap-2">
                 <button
                   onClick={() => setShowPopularOnly(!showPopularOnly)}
-                  className={`px-4 py-1.5 rounded-lg font-bold text-xs transition-all flex items-center gap-1.5 ${
+                  className={`flex-1 px-3 py-2.5 rounded-lg font-bold text-xs transition-all flex items-center justify-center gap-1.5 ${
                     showPopularOnly
                       ? 'bg-gradient-accent text-white shadow-md'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      : 'bg-gray-100 text-gray-700'
                   }`}
                 >
                   <Flame className="w-3.5 h-3.5" />
-                  Bestsellers Only
+                  Popular Only
                 </button>
-              </div>
 
-              {/* Divider */}
-              <div className="hidden lg:block w-px h-8 bg-gray-300"></div>
-
-              {/* Sort Dropdown */}
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-gray-500 uppercase">Sort:</span>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortOption)}
-                  className="px-3 py-1.5 rounded-lg font-bold text-xs bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all border-none focus:ring-2 focus:ring-accent/30 cursor-pointer"
-                >
-                  <option value="popular">Popular First</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="name">Name: A to Z</option>
-                </select>
+                {(searchQuery || vegFilter !== 'all' || showPopularOnly) && (
+                  <button
+                    onClick={() => {
+                      setSearchQuery('')
+                      setVegFilter('all')
+                      setShowPopularOnly(false)
+                    }}
+                    className="px-4 py-2.5 rounded-lg font-bold text-xs bg-red-50 text-red-600 hover:bg-red-100 transition-all flex items-center gap-1.5"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                    Clear
+                  </button>
+                )}
               </div>
             </div>
+          </motion.div>
 
-            {/* Right Side - Results & Clear */}
-            <div className="flex items-center gap-3 lg:ml-auto">
-              {/* Results Count */}
-              <div className="flex items-center gap-2 bg-accent/10 px-3 py-1.5 rounded-lg">
-                <span className="text-xs font-bold text-gray-600">Results:</span>
-                <span className="text-sm font-black text-accent">{filteredAndSortedItems.length}</span>
-              </div>
+          {/* Categories with Dropdown */}
+          {filteredCategories.length > 0 ? (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {filteredCategories.map((category, categoryIndex) => {
+                const isExpanded = expandedCategories.includes(category.id)
+                
+                return (
+                  <motion.div
+                    key={category.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: categoryIndex * 0.1 }}
+                    className="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden"
+                  >
+                    {/* Category Header - Clickable */}
+                    <button
+                      onClick={() => toggleCategory(category.id)}
+                      className="w-full px-6 py-5 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-3xl">{getCategoryIcon(category.id)}</span>
+                        <div className="text-left">
+                          <h2 className="text-xl md:text-2xl font-black text-primary">
+                            {category.name}
+                          </h2>
+                          <p className="text-sm text-gray-500 font-semibold">
+                            {category.items.length} {category.items.length === 1 ? 'item' : 'items'}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {isExpanded ? (
+                          <ChevronUp className="w-6 h-6 text-accent" />
+                        ) : (
+                          <ChevronDown className="w-6 h-6 text-gray-400" />
+                        )}
+                      </div>
+                    </button>
 
-              {/* Clear Filters */}
-              {(searchQuery || showPopularOnly || vegFilter !== 'all' || selectedCategory || sortBy !== 'popular') && (
-                <button
-                  onClick={() => {
-                    setSearchQuery('')
-                    setShowPopularOnly(false)
-                    setVegFilter('all')
-                    setSelectedCategory(null)
-                    setSortBy('popular')
-                  }}
-                  className="px-4 py-1.5 rounded-lg font-bold text-xs bg-red-50 text-red-600 hover:bg-red-100 transition-all flex items-center gap-1.5"
-                >
-                  <X className="w-3.5 h-3.5" />
-                  Clear All
-                </button>
-              )}
+                    {/* Category Items - Expandable */}
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="border-t border-gray-200"
+                        >
+                          <div className="p-4 md:p-6 bg-gradient-to-br from-cream/30 to-lightCream/30">
+                            {/* Items Grid */}
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                              {category.items.map((item, itemIndex) => (
+                                <motion.div
+                                  key={item.id}
+                                  initial={{ opacity: 0, scale: 0.95 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  transition={{ duration: 0.3, delay: itemIndex * 0.05 }}
+                                >
+                                  {/* Desktop Card */}
+                                  <div className="hidden lg:block bg-gradient-to-br from-cream/50 to-lightCream/50 rounded-xl p-5 hover:shadow-md transition-all border border-secondary/10">
+                                    <div className="flex items-start justify-between mb-3">
+                                      <div className="flex-1">
+                                        <div className="flex items-center gap-2 mb-1">
+                                          {item.isVeg ? (
+                                            <div className="w-5 h-5 border-2 border-green-600 flex items-center justify-center flex-shrink-0">
+                                              <div className="w-2.5 h-2.5 bg-green-600 rounded-full"></div>
+                                            </div>
+                                          ) : (
+                                            <div className="w-5 h-5 border-2 border-red-600 flex items-center justify-center flex-shrink-0">
+                                              <div className="w-2.5 h-2.5 bg-red-600 rounded-full"></div>
+                                            </div>
+                                          )}
+                                          <h3 className="text-lg font-black text-primary">{item.name}</h3>
+                                        </div>
+                                        <p className="text-sm text-gray-600 leading-relaxed">
+                                          {item.description}
+                                        </p>
+                                      </div>
+                                    </div>
+                                    <div className="flex items-center justify-between pt-3 border-t border-secondary/10">
+                                      <div className="text-xl font-black text-gradient">₹{item.price}</div>
+                                      {item.popular && (
+                                        <span className="bg-gradient-accent text-white text-xs font-bold px-3 py-1 rounded-full">
+                                          Popular
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+
+                                  {/* Tablet Card */}
+                                  <div className="hidden md:block lg:hidden bg-white rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-200">
+                                    <div className="p-4">
+                                      <div className="flex items-start gap-3 mb-3">
+                                        {item.isVeg ? (
+                                          <div className="w-5 h-5 border-2 border-green-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                            <div className="w-2.5 h-2.5 bg-green-600 rounded-full"></div>
+                                          </div>
+                                        ) : (
+                                          <div className="w-5 h-5 border-2 border-red-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                            <div className="w-2.5 h-2.5 bg-red-600 rounded-full"></div>
+                                          </div>
+                                        )}
+                                        <div className="flex-1 min-w-0">
+                                          <div className="flex items-start justify-between gap-2 mb-2">
+                                            <h3 className="text-base font-black text-primary leading-tight">{item.name}</h3>
+                                            {item.popular && (
+                                              <span className="bg-gradient-accent text-white text-xs font-bold px-2 py-0.5 rounded-full flex-shrink-0">
+                                                Popular
+                                              </span>
+                                            )}
+                                          </div>
+                                          <p className="text-sm text-gray-600 leading-relaxed mb-3">
+                                            {item.description}
+                                          </p>
+                                          <div className="text-xl font-black text-gradient">₹{item.price}</div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {/* Mobile Card */}
+                                  <div className="md:hidden bg-white rounded-xl shadow-sm border border-gray-200">
+                                    <div className="p-4">
+                                      {/* Header Row */}
+                                      <div className="flex items-start justify-between gap-3 mb-3">
+                                        <div className="flex items-start gap-2 flex-1 min-w-0">
+                                          {item.isVeg ? (
+                                            <div className="w-4 h-4 border-2 border-green-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                              <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+                                            </div>
+                                          ) : (
+                                            <div className="w-4 h-4 border-2 border-red-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                              <div className="w-2 h-2 bg-red-600 rounded-full"></div>
+                                            </div>
+                                          )}
+                                          <div className="flex-1 min-w-0">
+                                            <h3 className="text-base font-black text-primary leading-tight mb-1">{item.name}</h3>
+                                            {item.popular && (
+                                              <span className="inline-flex items-center gap-1 bg-gradient-accent text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                                                <Flame className="w-3 h-3" />
+                                                Popular
+                                              </span>
+                                            )}
+                                          </div>
+                                        </div>
+                                        <div className="flex items-center gap-0.5 flex-shrink-0">
+                                          <span className="text-lg font-black text-gradient">₹{item.price}</span>
+                                        </div>
+                                      </div>
+                                      
+                                      {/* Description */}
+                                      <p className="text-sm text-gray-600 leading-relaxed">
+                                        {item.description}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </motion.div>
+                              ))}
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                )
+              })}
             </div>
-          </div>
-
-          {/* Mobile Layout */}
-          <div className="md:hidden space-y-3">
-            {/* Row 1: Veg Filter & Results */}
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex gap-1 bg-gray-100 p-1 rounded-lg">
-                <button
-                  onClick={() => setVegFilter('all')}
-                  className={`px-3 py-1.5 rounded-md font-bold text-xs transition-all ${
-                    vegFilter === 'all' ? 'bg-white shadow-sm text-primary' : 'text-gray-600'
-                  }`}
-                >
-                  All
-                </button>
-                <button
-                  onClick={() => setVegFilter('veg')}
-                  className={`px-2 py-1.5 rounded-md font-bold text-xs transition-all flex items-center gap-1 ${
-                    vegFilter === 'veg' ? 'bg-white shadow-sm text-green-600' : 'text-gray-600'
-                  }`}
-                >
-                  <div className="w-3 h-3 border-2 border-green-600 flex items-center justify-center">
-                    <div className="w-1.5 h-1.5 bg-green-600 rounded-full"></div>
-                  </div>
-                  Veg
-                </button>
-                <button
-                  onClick={() => setVegFilter('nonveg')}
-                  className={`px-2 py-1.5 rounded-md font-bold text-xs transition-all flex items-center gap-1 ${
-                    vegFilter === 'nonveg' ? 'bg-white shadow-sm text-red-600' : 'text-gray-600'
-                  }`}
-                >
-                  <div className="w-3 h-3 border-2 border-red-600 flex items-center justify-center">
-                    <div className="w-1.5 h-1.5 bg-red-600 rounded-full"></div>
-                  </div>
-                  Non-Veg
-                </button>
-              </div>
-
-              {/* Results Count */}
-              <div className="flex items-center gap-1.5 bg-accent/10 px-3 py-1.5 rounded-lg">
-                <span className="text-xs font-bold text-accent">{filteredAndSortedItems.length}</span>
-                <span className="text-xs text-gray-600">items</span>
-              </div>
-            </div>
-
-            {/* Row 2: Bestsellers & Sort */}
-            <div className="flex items-center gap-2">
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-20"
+            >
+              <div className="text-8xl mb-6">🔍</div>
+              <h3 className="text-3xl font-black text-gray-400 mb-3">No items found</h3>
+              <p className="text-gray-500 text-lg mb-6">Try adjusting your filters or search query</p>
               <button
-                onClick={() => setShowPopularOnly(!showPopularOnly)}
-                className={`flex-1 px-3 py-2 rounded-lg font-bold text-xs transition-all flex items-center justify-center gap-1.5 ${
-                  showPopularOnly
-                    ? 'bg-gradient-accent text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700'
-                }`}
+                onClick={() => {
+                  setSearchQuery('')
+                  setVegFilter('all')
+                  setShowPopularOnly(false)
+                }}
+                className="bg-gradient-accent text-white px-8 py-3 rounded-xl font-bold hover:shadow-glow transition-all"
               >
-                <Flame className="w-3.5 h-3.5" />
-                Bestsellers
+                Clear Filters
               </button>
-
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="flex-1 px-3 py-2 rounded-lg font-bold text-xs bg-gray-100 text-gray-700 border-none focus:ring-2 focus:ring-accent/30"
-              >
-                <option value="popular">Popular</option>
-                <option value="price-low">Price ↑</option>
-                <option value="price-high">Price ↓</option>
-                <option value="name">A to Z</option>
-              </select>
-
-              {/* Clear Filters */}
-              {(searchQuery || showPopularOnly || vegFilter !== 'all' || selectedCategory || sortBy !== 'popular') && (
-                <button
-                  onClick={() => {
-                    setSearchQuery('')
-                    setShowPopularOnly(false)
-                    setVegFilter('all')
-                    setSelectedCategory(null)
-                    setSortBy('popular')
-                  }}
-                  className="px-3 py-2 rounded-lg font-bold text-xs bg-red-50 text-red-600 flex items-center gap-1"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              )}
-            </div>
-          </div>
+            </motion.div>
+          )}
         </div>
       </div>
-
-      <section className="py-8">
-        <div className="container-custom">
-
-          {/* Menu Items - Responsive Grid Layout */}
-          <AnimatePresence mode="wait">
-            {filteredAndSortedItems.length > 0 ? (
-              <motion.div
-                key={selectedCategory || searchQuery}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="grid grid-cols-1 md:grid-cols-2 gap-4"
-              >
-                {filteredAndSortedItems.map((item, index) => (
-                  <motion.div
-                    key={item.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.03 }}
-                    className="group bg-white rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 hover:border-accent/30"
-                  >
-                    {/* Desktop & Tablet Layout */}
-                    <div className="hidden md:block p-5">
-                      <div className="flex items-start justify-between gap-4">
-                        {/* Left Side - Item Info */}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start gap-3 mb-2">
-                            {/* Veg/Non-Veg Indicator */}
-                            <div className="mt-1 flex-shrink-0">
-                              {item.isVeg ? (
-                                <div className="w-5 h-5 border-2 border-green-600 flex items-center justify-center">
-                                  <div className="w-2.5 h-2.5 bg-green-600 rounded-full"></div>
-                                </div>
-                              ) : (
-                                <div className="w-5 h-5 border-2 border-red-600 flex items-center justify-center">
-                                  <div className="w-2.5 h-2.5 bg-red-600 rounded-full"></div>
-                                </div>
-                              )}
-                            </div>
-
-                            {/* Item Name and Badges */}
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 mb-1 flex-wrap">
-                                <h3 className="text-lg font-black text-primary group-hover:text-gradient transition-all">
-                                  {item.name}
-                                </h3>
-                                {item.popular && (
-                                  <span className="bg-gradient-accent text-white px-2 py-0.5 rounded text-xs font-bold flex items-center gap-1">
-                                    <Flame className="w-3 h-3" />
-                                    Bestseller
-                                  </span>
-                                )}
-                              </div>
-                              
-                              {/* Description */}
-                              <p className="text-gray-600 text-sm leading-relaxed mb-3">
-                                {item.description}
-                              </p>
-
-                              {/* Reviews and Category */}
-                              <div className="flex items-center gap-4">
-                                <div className="flex items-center gap-1">
-                                  <Star className="w-4 h-4 text-gold fill-gold" />
-                                  <span className="text-sm font-bold text-gray-700">
-                                    {item.popular ? '4.8' : '4.5'}
-                                  </span>
-                                  <span className="text-xs text-gray-500">
-                                    ({item.popular ? '250+' : '120+'})
-                                  </span>
-                                </div>
-                                
-                                {/* Category Tag */}
-                                <span className="text-xs font-semibold text-accent bg-accent/10 px-2 py-1 rounded">
-                                  {item.category}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Right Side - Price */}
-                        <div className="flex flex-col items-end flex-shrink-0">
-                          <div className="flex items-center gap-1">
-                            <IndianRupee className="w-5 h-5 text-primary font-black" />
-                            <span className="text-2xl font-black text-gradient">{item.price}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Mobile Layout */}
-                    <div className="md:hidden p-4">
-                      <div className="flex gap-3">
-                        {/* Left - Veg/Non-Veg Indicator */}
-                        <div className="flex-shrink-0 mt-1">
-                          {item.isVeg ? (
-                            <div className="w-5 h-5 border-2 border-green-600 flex items-center justify-center">
-                              <div className="w-2.5 h-2.5 bg-green-600 rounded-full"></div>
-                            </div>
-                          ) : (
-                            <div className="w-5 h-5 border-2 border-red-600 flex items-center justify-center">
-                              <div className="w-2.5 h-2.5 bg-red-600 rounded-full"></div>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Middle - Item Details */}
-                        <div className="flex-1 min-w-0">
-                          {/* Name and Price Row */}
-                          <div className="flex items-start justify-between gap-2 mb-2">
-                            <div className="flex-1 min-w-0">
-                              <h3 className="text-base font-black text-primary leading-tight mb-1">
-                                {item.name}
-                              </h3>
-                              {item.popular && (
-                                <span className="inline-flex items-center gap-1 bg-gradient-accent text-white px-2 py-0.5 rounded text-xs font-bold">
-                                  <Flame className="w-2.5 h-2.5" />
-                                  Bestseller
-                                </span>
-                              )}
-                            </div>
-                            <div className="flex items-center gap-0.5 flex-shrink-0">
-                              <IndianRupee className="w-4 h-4 text-primary font-black" />
-                              <span className="text-xl font-black text-gradient">{item.price}</span>
-                            </div>
-                          </div>
-
-                          {/* Description */}
-                          <p className="text-gray-600 text-xs leading-relaxed mb-2 line-clamp-2">
-                            {item.description}
-                          </p>
-
-                          {/* Bottom Row - Reviews and Category */}
-                          <div className="flex items-center justify-between gap-2">
-                            <div className="flex items-center gap-1">
-                              <Star className="w-3.5 h-3.5 text-gold fill-gold" />
-                              <span className="text-xs font-bold text-gray-700">
-                                {item.popular ? '4.8' : '4.5'}
-                              </span>
-                              <span className="text-xs text-gray-500">
-                                ({item.popular ? '250+' : '120+'})
-                              </span>
-                            </div>
-                            
-                            <span className="text-xs font-semibold text-accent bg-accent/10 px-2 py-0.5 rounded">
-                              {item.category}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="text-center py-20"
-              >
-                <div className="text-8xl mb-6">🔍</div>
-                <h3 className="text-3xl font-black text-gray-400 mb-3">No items found</h3>
-                <p className="text-gray-500 text-lg mb-6">Try adjusting your filters or search query</p>
-                <button
-                  onClick={() => {
-                    setSearchQuery('')
-                    setShowPopularOnly(false)
-                    setVegFilter('all')
-                    setSelectedCategory(null)
-                  }}
-                  className="bg-gradient-accent text-white px-8 py-3 rounded-xl font-bold hover:shadow-glow transition-all"
-                >
-                  Clear Filters
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="bg-gradient-to-br from-primary via-dark to-secondary text-white py-12">
-        <div className="container-custom text-center">
-          <h3 className="text-3xl font-black mb-2">
-            Ready to <span className="font-script text-4xl text-gold">Order?</span>
-          </h3>
-          <p className="text-gray-300 mb-6">Experience authentic flavors delivered fresh</p>
-          <Link 
-            href="/order" 
-            className="inline-flex items-center gap-2 bg-gradient-accent text-white px-8 py-3 rounded-xl font-bold hover:shadow-glow transition-all"
-          >
-            <ShoppingBag className="w-5 h-5" />
-            Order Now
-          </Link>
-        </div>
-      </section>
     </div>
   )
 }

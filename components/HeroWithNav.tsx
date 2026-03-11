@@ -26,7 +26,7 @@ export default function HeroWithNav() {
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/menu', label: 'Menu' },
-    { href: '/order', label: 'Order Online' },
+    // { href: '/order', label: 'Order Online' },
     { href: '/offers', label: 'Offers' },
     { href: '/contact', label: 'Contact' },
   ]
@@ -104,13 +104,13 @@ export default function HeroWithNav() {
                 <Phone className="w-4 h-4" />
                 <span className="text-sm">+91 98765 43210</span>
               </a>
-              <Link
+              {/* <Link
                 href="/order"
                 className="bg-gradient-accent text-white px-5 py-2.5 rounded-xl font-bold hover:shadow-glow transition-all flex items-center gap-2"
               >
                 <ShoppingBag className="w-4 h-4" />
                 Order Now
-              </Link>
+              </Link> */}
             </div>
 
             {/* Mobile Menu Button */}
@@ -152,14 +152,14 @@ export default function HeroWithNav() {
                   <Phone className="w-4 h-4" />
                   +91 98765 43210
                 </a>
-                <Link
+                {/* <Link
                   href="/order"
                   className="flex items-center justify-center gap-2 bg-gradient-accent text-white px-6 py-3 rounded-xl font-bold"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <ShoppingBag className="w-4 h-4" />
                   Order Now
-                </Link>
+                </Link> */}
               </div>
             </div>
           )}
@@ -208,14 +208,14 @@ export default function HeroWithNav() {
               transition={{ duration: 0.8, delay: 0.6 }}
               className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
             >
-              <Link href="/order" className="group bg-gradient-accent text-white px-8 py-3 rounded-xl font-bold hover:shadow-glow transition-all transform hover:scale-105 inline-flex items-center justify-center gap-2">
+              {/* <Link href="/order" className="group bg-gradient-accent text-white px-8 py-3 rounded-xl font-bold hover:shadow-glow transition-all transform hover:scale-105 inline-flex items-center justify-center gap-2">
                 <ShoppingBag className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                 Order Online
               </Link>
               <button onClick={() => setIsModalOpen(true)} className="group bg-white/10 backdrop-blur-md border-2 border-white text-white px-8 py-3 rounded-xl font-bold hover:bg-white hover:text-primary transition-all transform hover:scale-105 inline-flex items-center justify-center gap-2">
                 <Calendar className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                 Reserve Table
-              </button>
+              </button> */}
             </motion.div>
 
             <motion.div

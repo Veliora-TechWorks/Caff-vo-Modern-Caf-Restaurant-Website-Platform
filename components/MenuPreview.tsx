@@ -11,6 +11,18 @@ export default function MenuPreview() {
     .flatMap(cat => cat.items.filter(item => item.popular).map(item => ({ ...item, category: cat.name })))
     .slice(0, 6)
 
+  const getItemImage = (itemName: string) => {
+    const imageMap: { [key: string]: string } = {
+      'Masala Chai': 'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=400&q=80',
+      'Paneer Tikka': 'https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=400&q=80',
+      'Chicken Biryani': 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400&q=80',
+      'Butter Chicken': 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=400&q=80',
+      'Veg Biryani': 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400&q=80',
+      'Samosa': 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&q=80'
+    }
+    return imageMap[itemName] || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80'
+  }
+
   return (
     <section className="section-padding bg-gradient-to-br from-cream via-lightCream to-white relative overflow-hidden">
       <div className="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
@@ -47,14 +59,18 @@ export default function MenuPreview() {
               {/* Desktop Card */}
               <div className="hidden md:block bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all h-full">
                 <div className="relative h-56 bg-gradient-to-br from-accent/10 to-gold/10">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-8xl opacity-20">🍽️</div>
-                  </div>
-                  <div className="absolute top-4 right-4 bg-gradient-accent text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                  <Image
+                    src={getItemImage(item.name)}
+                    alt={item.name}
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute top-4 right-4 bg-gradient-accent text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 z-10">
                     <Star className="w-3 h-3 fill-current" />
                     Popular
                   </div>
-                  <div className="absolute top-4 left-4">
+                  <div className="absolute top-4 left-4 z-10">
                     {item.isVeg ? (
                       <div className="bg-white rounded-lg px-3 py-1.5 flex items-center gap-1.5 shadow-md">
                         <div className="w-4 h-4 border-2 border-green-600 flex items-center justify-center">
@@ -83,10 +99,10 @@ export default function MenuPreview() {
 
                   <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                     <div className="text-2xl font-black text-gradient">₹{item.price}</div>
-                    <Link href="/order" className="bg-gradient-accent text-white px-5 py-2 rounded-lg font-bold hover:shadow-glow transition-all text-sm flex items-center gap-1">
+                    {/* <Link href="/order" className="bg-gradient-accent text-white px-5 py-2 rounded-lg font-bold hover:shadow-glow transition-all text-sm flex items-center gap-1">
                       Order
                       <ArrowRight className="w-4 h-4" />
-                    </Link>
+                    </Link> */}
                   </div>
                 </div>
               </div>
@@ -94,14 +110,19 @@ export default function MenuPreview() {
               {/* Mobile Compact Card */}
               <div className="md:hidden bg-white rounded-xl shadow-card overflow-hidden">
                 <div className="flex gap-4 p-4">
-                  <div className="flex-shrink-0 w-24 h-24 bg-gradient-to-br from-accent/10 to-gold/10 rounded-xl flex items-center justify-center relative">
-                    <div className="text-4xl">🍽️</div>
+                  <div className="flex-shrink-0 w-24 h-24 bg-gradient-to-br from-accent/10 to-gold/10 rounded-xl relative overflow-hidden">
+                    <Image
+                      src={getItemImage(item.name)}
+                      alt={item.name}
+                      fill
+                      className="object-cover"
+                    />
                     {item.isVeg ? (
-                      <div className="absolute top-1 left-1 w-4 h-4 border-2 border-green-600 bg-white flex items-center justify-center">
+                      <div className="absolute top-1 left-1 w-4 h-4 border-2 border-green-600 bg-white flex items-center justify-center z-10">
                         <div className="w-1.5 h-1.5 bg-green-600 rounded-full"></div>
                       </div>
                     ) : (
-                      <div className="absolute top-1 left-1 w-4 h-4 border-2 border-red-600 bg-white flex items-center justify-center">
+                      <div className="absolute top-1 left-1 w-4 h-4 border-2 border-red-600 bg-white flex items-center justify-center z-10">
                         <div className="w-1.5 h-1.5 bg-red-600 rounded-full"></div>
                       </div>
                     )}
@@ -119,9 +140,9 @@ export default function MenuPreview() {
                     <p className="text-xs text-gray-600 mb-3 line-clamp-2">{item.description}</p>
                     <div className="flex items-center justify-between">
                       <div className="text-xl font-black text-gradient">₹{item.price}</div>
-                      <Link href="/order" className="bg-gradient-accent text-white px-4 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1">
+                      {/* <Link href="/order" className="bg-gradient-accent text-white px-4 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1">
                         Order
-                      </Link>
+                      </Link> */}
                     </div>
                   </div>
                 </div>

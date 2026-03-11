@@ -39,11 +39,11 @@ export default function Footer() {
             <h2 className="font-black text-lg mb-6 text-gold"><span className="font-cursive text-xl">Quick</span> Links</h2>
             <ul className="space-y-3">
               <li><Link href="/menu" className="text-gray-300 hover:text-gold transition-colors font-semibold">Menu</Link></li>
-              <li><Link href="/order" className="text-gray-300 hover:text-gold transition-colors font-semibold">Order Online</Link></li>
+              {/* <li><Link href="/order" className="text-gray-300 hover:text-gold transition-colors font-semibold">Order Online</Link></li>
               <li><Link href="/reserve" className="text-gray-300 hover:text-gold transition-colors font-semibold">Reserve Table</Link></li>
-              <li><Link href="/offers" className="text-gray-300 hover:text-gold transition-colors font-semibold">Offers</Link></li>
+              <li><Link href="/offers" className="text-gray-300 hover:text-gold transition-colors font-semibold">Offers</Link></li> */}
               <li><Link href="/contact" className="text-gray-300 hover:text-gold transition-colors font-semibold">Contact</Link></li>
-              <li><Link href="/staff/login" className="text-gray-300 hover:text-gold transition-colors font-semibold flex items-center gap-2"><LogIn className="w-4 h-4" />Staff Login</Link></li>
+              {/* <li><Link href="/staff/login" className="text-gray-300 hover:text-gold transition-colors font-semibold flex items-center gap-2"><LogIn className="w-4 h-4" />Staff Login</Link></li> */}
             </ul>
           </div>
 
@@ -122,11 +122,11 @@ export default function Footer() {
             <h2 className="font-black text-base mb-4 text-gold text-center">Quick Links</h2>
             <div className="grid grid-cols-2 gap-3">
               <Link href="/menu" className="text-gray-300 text-sm font-semibold text-center">Menu</Link>
-              <Link href="/order" className="text-gray-300 text-sm font-semibold text-center">Order Online</Link>
+              {/* <Link href="/order" className="text-gray-300 text-sm font-semibold text-center">Order Online</Link>
               <Link href="/reserve" className="text-gray-300 text-sm font-semibold text-center">Reserve Table</Link>
-              <Link href="/offers" className="text-gray-300 text-sm font-semibold text-center">Offers</Link>
+              <Link href="/offers" className="text-gray-300 text-sm font-semibold text-center">Offers</Link> */}
               <Link href="/contact" className="text-gray-300 text-sm font-semibold text-center col-span-2">Contact</Link>
-              <Link href="/staff/login" className="text-gold text-sm font-bold text-center col-span-2 flex items-center justify-center gap-1"><LogIn className="w-3 h-3" />Staff Login</Link>
+              {/* <Link href="/staff/login" className="text-gold text-sm font-bold text-center col-span-2 flex items-center justify-center gap-1"><LogIn className="w-3 h-3" />Staff Login</Link> */}
             </div>
           </div>
 
